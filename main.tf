@@ -143,6 +143,22 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public[0].id
 }
 
+resource "aws_route" "public_extra" {
+  for_each = {for row in var.public_subnets_extra_routes: "${row.cidr_block}-${aws_route_table.public[0].id}" => row}
+  route_table_id         = aws_route_table.public[0].id
+  cidr_block                 = each.value.cidr_block
+  gateway_id                 = each.value.gateway_id
+  ipv6_cidr_block            = each.value.ipv6_cidr_block
+  vpc_endpoint_id            = each.value.vpc_endpoint_id
+  transit_gateway_id         = each.value.transit_gateway_id
+  vpc_peering_connection_id  = each.value.vpc_peering_connection_id
+  nat_gateway_id             = each.value.nat_gateway_id
+  destination_prefix_list_id = each.value.destination_prefix_list_id
+  timeouts {
+    create = "5m"
+  }
+}
+
 resource "aws_route" "public_internet_gateway" {
   count = local.create_public_subnets && var.create_igw ? 1 : 0
 
@@ -266,6 +282,22 @@ resource "aws_route_table" "private" {
     var.tags,
     var.private_route_table_tags,
   )
+}
+
+resource "aws_route" "private_extra" {
+  for_each = {for row in var.private_subnets_extra_routes: "${row.cidr_block}-${aws_route_table.private[0].id}" => row}
+  route_table_id         = aws_route_table.private[0].id
+  cidr_block                 = each.value.cidr_block
+  gateway_id                 = each.value.gateway_id
+  ipv6_cidr_block            = each.value.ipv6_cidr_block
+  vpc_endpoint_id            = each.value.vpc_endpoint_id
+  transit_gateway_id         = each.value.transit_gateway_id
+  vpc_peering_connection_id  = each.value.vpc_peering_connection_id
+  nat_gateway_id             = each.value.nat_gateway_id
+  destination_prefix_list_id = each.value.destination_prefix_list_id
+  timeouts {
+    create = "5m"
+  }
 }
 
 resource "aws_route_table_association" "private" {
