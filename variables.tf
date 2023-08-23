@@ -1577,3 +1577,30 @@ variable "putin_khuylo" {
   type        = bool
   default     = true
 }
+variable "private_subnets_extra_routes" {
+  type        = list(object({
+    cidr_block                 = optional(string)
+    gateway_id                 = optional(string)
+    ipv6_cidr_block            = optional(string)
+    vpc_endpoint_id            = optional(string)
+    transit_gateway_id         = optional(string)
+    vpc_peering_connection_id  = optional(string)
+    nat_gateway_id             = optional(string)
+    destination_prefix_list_id = optional(string)
+  }))
+  default     = []
+}
+
+variable "public_subnets_extra_routes" {
+  type        = list(object({
+    cidr_block                 = optional(string)
+    gateway_id                 = optional(string)
+    ipv6_cidr_block            = optional(string)
+    vpc_endpoint_id            = optional(string)
+    transit_gateway_id         = optional(string)
+    vpc_peering_connection_id  = optional(string)
+    nat_gateway_id             = optional(string)
+    destination_prefix_list_id = optional(string)
+  }))
+  default     = []
+}
